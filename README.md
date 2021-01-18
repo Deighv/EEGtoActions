@@ -2,31 +2,34 @@
 
 ## Installation
 
-- Download python 3
-- Download pip
-- Clone repo
-- Run in folder: `pip install -r requirements.txt`
+ * Download python 3
+ * Download pip
+ * Clone repo
+ * Run in folder: 'pip install -r requirements.txt'
+ * Install postgres, run SQL scripts in data folder, optionally use real passwords
 
-## Running
+## Storing Data
 * Equip EEG, turn on
 * Launch openbci, connect, make sure levels are <10, resolve any sensor position issues
   * Stop Stream, Stop Session
 
-* Start OpenBCI_LSL\openbci_lsl.py
+* Run 'python openbci_lsl.py'
  * Daisy Enabled
  * Changing anything else doesn't actually change anything and the streams are misindexed starting at 1 which is why the code starts at 1 instead of 0...
  * Use GUI to connect to board, start stream
 
-* Run outputEEGData.py
+* Run 'python outputEEGData.py'
 
 * Launch SQL, ensure rows are being created
 
 
--------
+## Creating Model (Work in Progress)
 
-outputEEGData.py - Takes data stream being piped out by openbci via LSL and inserts into a database per data sample (60/second), timestamp is built into DB/column
+  * Run 'python outputEEGData.py' 
+   * Pulls data via SQL to prep for model- currently data is not being submitted in the correct format
 
-EEG.sql - DB structure
+## todo- Create interface layer, model action:button/stick presses
+   * further todo, learn number of states eeg can recognize/if any
 
 
 Ref -
