@@ -2,14 +2,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 import psycopg2
-#Start with left/right/up/down on stick (rounded to on/off) and ABXY - Can be pushing left/up and 2 buttons, 4 total
-#Need SQL to pull data EEG and Controller Data
-#Controller SQL will need to be fancy and pull down index/library needs to be made to translate the two- include left stick and dpad in OR
-#Put into paired lists
-#SQL for controller index ID (second number)
 print("Connecting to Database")
 conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
 print(conn)
+#Get newest 1000 controller index states
 controllerIndexSQL = """
 SELECT cpi.controller_press_index_id
 	FROM controller_data_normalized_view vw
@@ -24,6 +20,7 @@ RIGHT OUTER JOIN controller_press_index cpi ON
   vw.b = cpi.b
 ORDER BY Time_ID ASC LIMIT 1000;
 """
+#Get newest 1000 eeg states
 EEGSql = """
 SELECT  
 ROUND(SUM(GREATEST(channel0, 0)),0),
@@ -62,7 +59,7 @@ print("Controller State Numpy'd")
 EEG_State = np.asarray(EEG_State)
 print("EEG State Numpy'd")
 
-#MLFoundations4.py will have a lot of info on how to get data in correct format
+#Machine Learning Foundations was helpful in this- https://www.youtube.com/watch?v=_Z9TRANg4c0&list=PLOU2XLYxmsII9mzQ-Xxug4l2o04JBrkLV&index=1
 
 model = keras.Sequential([
     keras.layers.Flatten(16, 1000),
