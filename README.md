@@ -8,7 +8,7 @@
  * Run in folder: 'pip install -r requirements.txt'
  * Install postgres, run SQL scripts in data folder, optionally use real passwords
 
-## Storing Data
+## Data Layer
 * Equip EEG, turn on
 * Launch openbci, connect, make sure levels are <10, resolve any sensor position issues
   * Stop Stream, Stop Session
@@ -22,14 +22,17 @@
 * Fire up pgAdmin, ensure rows are being created
 
 
-## Creating Model (Work in Progress)
+## Model Layer
 
-  * Run 'python outputEEGData.py' 
-   * Pulls data via SQL to prep for model- currently data is not being submitted in the correct format
+* Run 'python outputEEGData.py' 
+  * Pulls data via SQL to prep for model- currently data is not being submitted in the correct format
 
-## todo- Create interface layer, model action:button/stick presses
-   * further todo, learn number of states eeg can recognize/if any
+## Todo - Interface Layer
+* Use model to create action:hardware emulation
 
 
-Ref -
-sentdex experiment: https://github.com/Sentdex/BCI
+
+
+
+
+Ref (and thanks)- sentdex experiment: https://github.com/Sentdex/BCI
