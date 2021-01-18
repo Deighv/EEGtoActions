@@ -31,7 +31,8 @@
 
 ## Model Layer
 
-* Run 'python outputEEGData.py' 
+* Run 'python outputEEGData.py' - close(ish?) but data isn't being pushed into model in the correct format
+  * most of the data prep is being done in SQL
   
 
 ## Todo - Interface Layer
