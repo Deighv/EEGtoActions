@@ -7,7 +7,7 @@
 * Clone repo
 * Run in folder: 'pip install -r requirements.txt'
 * Install postgres, run SQL scripts in data folder, optionally use real passwords
-* Backup of my data available here- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing
+* Backup of my data available here- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing (tar backup of postgres db for importing)
 
 ## Database Structure
 * Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
