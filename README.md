@@ -2,13 +2,20 @@
 
 ## Installation
 
- * Download python 3
- * Download pip
- * Clone repo
- * Run in folder: 'pip install -r requirements.txt'
- * Install postgres, run SQL scripts in data folder, optionally use real passwords
+* Download python 3
+* Download pip
+* Clone repo
+* Run in folder: 'pip install -r requirements.txt'
+* Install postgres, run SQL scripts in data folder, optionally use real passwords
+
+## Database Structure
+* Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
+* Controller_Data - This table stores the controller's state as of the moment the EEG signal came in
+* Controller_Data_Normalized_View - This converts stick pushes into dpad cardinal directions (This assists with the final table..)
+* Controller_Press_Index - This turns every state the controller can be in into a single number, an index.  This allows for ML to compare signals to a handful (100?) states, instead of trying to map it to each button press (which would also be possible in this system)
 
 ## Data Layer
+* outputEEGData.py - This script reads signals incoming from an (Open BCI Ultracortex Mk 4) EEG. Each time a signal comes in (240/second on average), the system checks the controller state, and stores both in the database with the same timestamp  
 * Equip EEG, turn on
 * Launch openbci, connect, make sure levels are <10, resolve any sensor position issues
   * Stop Stream, Stop Session
@@ -25,10 +32,12 @@
 ## Model Layer
 
 * Run 'python outputEEGData.py' 
-  * Pulls data via SQL to prep for model- currently data is not being submitted in the correct format
+  
 
 ## Todo - Interface Layer
 * Use model to create action:hardware emulation
+
+
 
 
 
