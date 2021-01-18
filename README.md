@@ -9,8 +9,7 @@ A system to extract EEG + Controller data while gaming, analyze the signals and 
 * Clone repo
 * Run in folder: 'pip install -r requirements.txt'
 * Install postgres, run SQL scripts in data folder, optionally use real passwords
-* Backup of my database available here- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing 
-  * from postgres command line run: pg_restore -d eeg path/to/EEGDB
+* Backup of my database available here if you're unable to make your own data- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing 
   * https://www.postgresql.org/docs/7.3/app-pgrestore.html 
 
 ## Database Structure
