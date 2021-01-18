@@ -6,6 +6,7 @@ print("Connecting to Database")
 conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
 print(conn)
 #Get newest 1000 controller index states
+
 controllerIndexSQL = """
 SELECT cpi.controller_press_index_id
 	FROM controller_data_normalized_view vw
