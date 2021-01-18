@@ -1,5 +1,7 @@
 # EEG To Action
 
+A system to extract EEG + Controller data while gaming, analyze the signals and create a model with Tensorflow in the effort of creating interface devices using EEG signals 
+
 ## Installation
 
 * Download python 3
@@ -8,7 +10,8 @@
 * Run in folder: 'pip install -r requirements.txt'
 * Install postgres, run SQL scripts in data folder, optionally use real passwords
 * Backup of my database available here- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing 
-  * https://www.postgresql.org/docs/7.3/app-pgrestore.html
+  * from postgres command line run: pg_restore -d eeg path/to/EEGDB
+  * https://www.postgresql.org/docs/7.3/app-pgrestore.html 
 
 ## Database Structure
 * Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
