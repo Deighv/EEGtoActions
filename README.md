@@ -14,13 +14,12 @@
   * Stop Stream, Stop Session
 
 * Run 'python openbci_lsl.py'
- * Daisy Enabled
- * Changing anything else doesn't actually change anything and the streams are misindexed starting at 1 which is why the code starts at 1 instead of 0...
- * Use GUI to connect to board, start stream
+  * Daisy Enabled
+  * Changing anything else doesn't actually change anything and the streams are misindexed starting at 1 which is why the code starts at 1 instead of 0...
+  * Use GUI to connect to board, start stream
 
-* Run 'python outputEEGData.py'
-
-* Launch SQL, ensure rows are being created
+* Run 'python outputEEGData.py' to begin pulling down controller state+eeg data and putting into postgres
+* Fire up pgAdmin, ensure rows are being created
 
 
 ## Creating Model (Work in Progress)
