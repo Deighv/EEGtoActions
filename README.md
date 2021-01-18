@@ -12,7 +12,7 @@
 * Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
 * Controller_Data - This table stores the controller's state as of the moment the EEG signal came in
 * Controller_Data_Normalized_View - This converts stick pushes into dpad cardinal directions (This assists with the final table..)
-* Controller_Press_Index - This turns every state the controller can be in into a single number, an index.  This allows for ML to compare signals to a handful (100?) states, instead of trying to map it to each button press (which would also be possible in this system)
+* Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press (which would also be possible in this system)- this is grabbed via a kind of cartesian join in the model layer
 
 ## Data Layer
 * outputEEGData.py - This script reads signals incoming from an (Open BCI Ultracortex Mk 4) EEG. Each time a signal comes in (240/second on average), the system checks the controller state, and stores both in the database with the same timestamp  
