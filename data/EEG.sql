@@ -117,7 +117,7 @@ CREATE TABLE Controller_Press_Index (
     Y boolean NOT NULL
 );
 
-/* sorrrrrrrry maaaaark */
+/* everyone loves data in their repo! */
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE);
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE);
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE);
@@ -199,28 +199,3 @@ INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_d
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE);
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE);
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE);
-
-
-EEGSql = """
-SELECT  
-SUM(GREATEST(channel0, 0)) / 70000,
-SUM(GREATEST(channel1, 0)) / 70000,
-SUM(GREATEST(channel2, 0)) / 70000,
-SUM(GREATEST(channel3, 0)) / 70000,
-SUM(GREATEST(channel4, 0)) / 70000,
-SUM(GREATEST(channel5, 0)) / 70000,
-SUM(GREATEST(channel6, 0)) / 70000,
-SUM(GREATEST(channel7, 0)) / 70000,
-SUM(GREATEST(channel8, 0)) / 70000,
-SUM(GREATEST(channel9, 0)) / 70000,
-SUM(GREATEST(channel10, 0)) / 70000,
-SUM(GREATEST(channel11, 0)) / 70000,
-SUM(GREATEST(channel12, 0)) / 70000,
-SUM(GREATEST(channel13, 0)) / 70000,
-SUM(GREATEST(channel14, 0)) / 70000,
-SUM(GREATEST(channel15, 0)) / 70000
-  FROM headset_data 
-GROUP BY Time_ID 
-ORDER BY Time_ID ASC
-LIMIT 1000;
-"""
