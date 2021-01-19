@@ -21,7 +21,7 @@ A system to extract EEG + Controller data while gaming, analyze the signals and 
 ## Data Layer
 * outputEEGData.py - This script reads signals incoming from an (Open BCI Ultracortex Mk 4) EEG. Each time a signal comes in (240/second on average), the system checks the controller state, and stores both in the database with the same timestamp  
 * Equip EEG, turn on
-* Launch openbci, connect, make sure levels are <10, resolve any sensor position issues
+* Launch openbci, connect, stream, check levels + resolve any sensor position issues
   * Stop Stream, Stop Session
 
 * Run 'python openbci_lsl.py'
@@ -35,8 +35,7 @@ A system to extract EEG + Controller data while gaming, analyze the signals and 
 
 ## Model Layer
 
-* Run 'python outputEEGData.py' - close(ish?) but data isn't being pushed into model in the correct format
-  * most of the data prep is being done in SQL
+* Run 'python outputEEGData.py' - Work in Progress- have pulled down data to use + basic tweaks to get the data in the correct form
   
 
 ## Todo - Interface Layer
