@@ -119,9 +119,6 @@ EEG_Training_State = np.asarray(EEG_Training_State)
 EEG_Training_State = EEG_Training_State.astype(int)
 print("EEG Training Data Numpy'd")
 
-
-#Machine Learning Foundations was helpful in this- https://www.youtube.com/watch?v=_Z9TRANg4c0&list=PLOU2XLYxmsII9mzQ-Xxug4l2o04JBrkLV&index=1
-
 model = tf.keras.models.Sequential([
     keras.layers.Flatten(),
     keras.layers.Dense(128, activation=tf.nn.relu),
