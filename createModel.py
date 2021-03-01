@@ -12,7 +12,7 @@ class myCallback(tf.keras.callbacks.Callback):
 callbacks = myCallback()
 
 print("Connecting to Database")
-conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
+conn = psycopg2.connect(database="EEG", user="postgres", password="penislol", host="127.0.0.1", port="5432")
 print(conn)
 
 #now only checking for left/right as proof of concept
@@ -149,7 +149,7 @@ print("EEG Training Data Numpy'd")
 #Final number is the range of eeg data after dividing by highest number
 #could normalize this to be in scale with each channel not by overall highest
 #Need to set reshape size to be number of rows dynamically
-EEG_Training_State=EEG_Training_State.reshape(24648, 16, 1, 1)
+EEG_Training_State=EEG_Training_State.reshape(1413885, 16, 1, 1)
 #EEG_Training_State=EEG_Training_State / 68645
 EEG_State = EEG_State.reshape(1000, 16, 1, 1)
 #EEG_State=EEG_State/ 68645
@@ -168,7 +168,7 @@ print("model compiled, attempting fit with data")
 ###
 #Grab new eeg_state+controller_state to test model with
 ###
-model.fit(EEG_Training_State, Controller_Training_State, epochs=500, callbacks=[callbacks])
+model.fit(EEG_Training_State, Controller_Training_State, epochs=100, callbacks=[callbacks])
 
 model.evaluate(EEG_State, Controller_State)
 model.save("mymodel")
