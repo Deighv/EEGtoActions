@@ -1,6 +1,7 @@
-CREATE DATABASE EEG;
+--Must create DB in separate script/gui:
+--CREATE DATABASE EEG;
 
-DROP TABLE Headset_Data;
+DROP TABLE IF EXISTS Headset_Data CASCADE;
 CREATE TABLE Headset_Data (
     Time_ID TIMESTAMP NOT NULL DEFAULT NOW(),
     Channel0 NUMERIC NOT NULL,
@@ -44,7 +45,7 @@ CREATE TABLE Headset_Data (
     AccelChannel2 NUMERIC NOT NULL
 );*/
 
-DROP TABLE Controller_Data;
+DROP TABLE IF EXISTS Controller_Data CASCADE;
 CREATE TABLE Controller_Data (
     Time_ID TIMESTAMP NOT NULL DEFAULT NOW(),
     Stick_L_X NUMERIC NOT NULL,
@@ -68,7 +69,7 @@ CREATE TABLE Controller_Data (
     Trigger_L NUMERIC NOT NULL,
     Trigger_R NUMERIC NOT NULL
 );
-DROP TABLE Headset_Data;
+DROP TABLE IF EXISTS Headset_Data CASCADE;
 CREATE TABLE Headset_Data (
     Time_ID TIMESTAMP NOT NULL DEFAULT NOW(),
     Channel0 NUMERIC NOT NULL,
@@ -90,21 +91,7 @@ CREATE TABLE Headset_Data (
 );
 /* Controller press index- ML wants to match to a single numeric identifier, with just dpad and xaby there's only 64 total options
  */
-
-DROP VIEW Controller_Data_Normalized_View;
-CREATE VIEW Controller_Data_Normalized_View AS
-SELECT 
-    CASE WHEN stick_l_x >= 0.1 THEN true ELSE false END dpad_right,
-    CASE WHEN stick_l_x <= -0.1 THEN true ELSE false END dpad_left,
-    CASE WHEN stick_l_y >= 0.1 THEN true ELSE false END dpad_up,
-    CASE WHEN stick_l_y <= -0.1 THEN true ELSE false END dpad_down,
-    x,a,b,y,Time_ID
-FROM Controller_Data
-ORDER BY Controller_Data.Time_ID ASC;
-
-
-
-DROP TABLE Controller_Press_Index;
+DROP TABLE IF EXISTS Controller_Press_Index CASCADE;
 CREATE TABLE Controller_Press_Index (
     Controller_Press_Index_ID serial PRIMARY KEY,
     Dpad_Right boolean NOT NULL,
@@ -116,6 +103,18 @@ CREATE TABLE Controller_Press_Index (
     B boolean NOT NULL,
     Y boolean NOT NULL
 );
+
+DROP VIEW IF EXISTS Controller_Data_Normalized_View;
+CREATE VIEW Controller_Data_Normalized_View AS
+SELECT 
+    CASE WHEN stick_l_x >= 0.1 THEN true ELSE false END dpad_right,
+    CASE WHEN stick_l_x <= -0.1 THEN true ELSE false END dpad_left,
+    CASE WHEN stick_l_y >= 0.1 THEN true ELSE false END dpad_up,
+    CASE WHEN stick_l_y <= -0.1 THEN true ELSE false END dpad_down,
+    x,a,b,y,Time_ID
+FROM Controller_Data
+ORDER BY Controller_Data.Time_ID ASC;
+
 
 /* everyone loves data in their repo! */
 INSERT INTO public.controller_press_index(dpad_left, dpad_right, dpad_up, dpad_down, a, x, b, y)	VALUES (FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE);

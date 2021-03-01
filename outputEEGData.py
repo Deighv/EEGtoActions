@@ -14,6 +14,7 @@ streams = resolve_stream('type', 'EEG')
 #accStream = StreamInlet(streams[0]) #Accelerometer
 eegStream = StreamInlet(streams[0]) #timeseries 
 print("Streams Resolved")
+print("Recording Headset+Controller data")
 while True:
     eegRaw = eegStream.pull_sample()
     Channel_Data = str(eegRaw)
@@ -30,13 +31,67 @@ while True:
     #Accelerometer_Data = Accelerometer_Data.replace("]", "")
     #Accelerometer_Data = Accelerometer_Data.split(", ")
     Button_Presses = XInput.get_button_values(XInput.get_state(0))
-    #{'DPAD_UP': False (1), 'DPAD_DOWN': False(3), 'DPAD_LEFT': False (5), 'DPAD_RIGHT': False (7), 'START': False(9), 'BACK': False(11), 'LEFT_THUMB': False(13), 'RIGHT_THUMB': False(15), 'LEFT_SHOULDER': False (17), 'RIGHT_SHOULDER': False (19), 'A': False (21), 'B': False (23), 'X': False (25), 'Y': False (27)}
+    #example data {'DPAD_UP': False (1), 'DPAD_DOWN': False(3), 'DPAD_LEFT': False (5), 'DPAD_RIGHT': False (7), 'START': False(9), 'BACK': False(11), 'LEFT_THUMB': False(13), 'RIGHT_THUMB': False(15), 'LEFT_SHOULDER': False (17), 'RIGHT_SHOULDER': False (19), 'A': False (21), 'B': False (23), 'X': False (25), 'Y': False (27)}
     Trigger_Presses = XInput.get_trigger_values(XInput.get_state(0))
     #(0, 0) to (255,255)
     Thumb_Values = XInput.get_thumb_values(XInput.get_state(0))
     #((0.0, -0.0), (0.0, -0.0)) -32667 to 32666
     #cur.execute("INSERT INTO Headset_Data(Channel0,Channel1,Channel2,Channel3,Channel4,Channel5,Channel6,Channel7,Channel8,Channel9,Channel10,Channel11,Channel12,Channel13,Channel14,Channel15,AccelChannel0,AccelChannel1,AccelChannel2) VALUES (" + Channel_Data[0] + "," + Channel_Data[1] + "," + Channel_Data[2] + "," + Channel_Data[3] + "," + Channel_Data[4] + "," + Channel_Data[5] + "," + Channel_Data[6] + "," + Channel_Data[7] + "," + Channel_Data[8] + "," + Channel_Data[9] + "," + Channel_Data[10] + "," + Channel_Data[11] + "," + Channel_Data[12] + "," + Channel_Data[13] + "," + Channel_Data[14] + "," + Channel_Data[15] + ","  + Accelerometer_Data[0] + "," + Accelerometer_Data[1] + "," + Accelerometer_Data[2] + ");")
-    cur.execute("INSERT INTO Headset_Data(Channel0,Channel1,Channel2,Channel3,Channel4,Channel5,Channel6,Channel7,Channel8,Channel9,Channel10,Channel11,Channel12,Channel13,Channel14,Channel15) VALUES (" + Channel_Data[0] + "," + Channel_Data[1] + "," + Channel_Data[2] + "," + Channel_Data[3] + "," + Channel_Data[4] + "," + Channel_Data[5] + "," + Channel_Data[6] + "," + Channel_Data[7] + "," + Channel_Data[8] + "," + Channel_Data[9] + "," + Channel_Data[10] + "," + Channel_Data[11] + "," + Channel_Data[12] + "," + Channel_Data[13] + "," + Channel_Data[14] + "," + Channel_Data[15] + ");")
+    cur.execute("""
+        INSERT INTO Headset_Data(
+            Channel0,
+            Channel1,
+            Channel2,
+            Channel3,
+            Channel4,
+            Channel5,
+            Channel6,
+            Channel7,
+            Channel8,
+            Channel9,
+            Channel10,
+            Channel11,
+            Channel12,
+            Channel13, 
+            Channel14,
+            Channel15
+        ) VALUES (
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s)
+        """,
+        (
+        Channel_Data[0],
+        Channel_Data[1],
+        Channel_Data[2],
+        Channel_Data[3],
+        Channel_Data[4],
+        Channel_Data[5],
+        Channel_Data[6],
+        Channel_Data[7],
+        Channel_Data[8],
+        Channel_Data[9],
+        Channel_Data[10],
+        Channel_Data[11],
+        Channel_Data[12],
+        Channel_Data[13],
+        Channel_Data[14],
+        Channel_Data[15]
+        )
+    )
     cur.execute("""
         INSERT INTO Controller_Data(
             stick_l_x,
