@@ -15,17 +15,20 @@ print("Connecting to Database")
 conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
 print(conn)
 
+#now only checking for left/right as proof of concept
+
 #Get 1000 latest controller indexes
 controllerIndexSQL = """
-SELECT 
+SELECT
 (CASE 
    WHEN dpad_right = true THEN 1
-ELSE 2
+   WHEN dpad_left = true THEN 2
+   ELSE 0
 END)
 as LeftRight
 	FROM controller_data_normalized_view 
-WHERE (dpad_right or dpad_left = true)
-ORDER BY Time_ID ASC 
+--WHERE (dpad_right or dpad_left = true)
+ORDER BY Time_ID ASC
 LIMIT 1000;
 """
 
@@ -34,11 +37,12 @@ controllerTrainingIndexSQL = """
 SELECT 
 (CASE 
    WHEN dpad_right = true THEN 1
-ELSE 2
+   WHEN dpad_left = true THEN 2
+   ELSE 0
 END)
 as LeftRight
 	FROM controller_data_normalized_view 
-WHERE (dpad_right or dpad_left = true)
+--WHERE (dpad_right or dpad_left = true)
 ORDER BY Time_ID ASC
 LIMIT (SELECT COUNT(controller_data_normalized_view.x) FROM controller_data_normalized_view) - 1000 offset 1000;
 """
@@ -65,7 +69,7 @@ ROUND(SUM(GREATEST(channel15, 0)),0)
   FROM headset_data a
 INNER JOIN controller_data_normalized_view b
   ON a.Time_ID = b.Time_ID
-WHERE (b.dpad_right or b.dpad_left = true)
+--WHERE (b.dpad_right or b.dpad_left = true)
 GROUP BY a.Time_ID 
 ORDER BY a.Time_ID ASC
 LIMIT 1000;
@@ -93,7 +97,7 @@ ROUND(SUM(GREATEST(channel15, 0)),0)
   FROM headset_data a
 INNER JOIN controller_data_normalized_view b
   ON a.Time_ID = b.Time_ID
-WHERE (b.dpad_right or b.dpad_left = true)
+--WHERE (b.dpad_right or b.dpad_left = true)
 GROUP BY a.Time_ID 
 ORDER BY a.Time_ID ASC
 LIMIT (SELECT COUNT(headset_data.channel0) FROM headset_data) - 1000 offset 1000;
@@ -136,16 +140,16 @@ EEG_Training_State = EEG_Training_State.astype(int)
 print("EEG Training Data Numpy'd")
 
 
-
 #need to figure out how to reshape the data to better prepare it for modeling
 #Reshape, 60k is for number of images, 28 is width/height, 1 is color (actually 0-255 divided by 255)
 #1413885(352749) number of rows in db-1000 for testing
+#reshape size wants to be whatever number it guesses at/16?  
 #16 is number of channels
 #1 is dimensions in each array (just a row)
 #Final number is the range of eeg data after dividing by highest number
 #could normalize this to be in scale with each channel not by overall highest
-#I have no idea what I'm doing
-EEG_Training_State=EEG_Training_State.reshape(352749, 16, 1, 1)
+#Need to set reshape size to be number of rows dynamically
+EEG_Training_State=EEG_Training_State.reshape(24648, 16, 1, 1)
 #EEG_Training_State=EEG_Training_State / 68645
 EEG_State = EEG_State.reshape(1000, 16, 1, 1)
 #EEG_State=EEG_State/ 68645
@@ -153,7 +157,7 @@ EEG_State = EEG_State.reshape(1000, 16, 1, 1)
 model = tf.keras.models.Sequential([
     keras.layers.Flatten(),
     keras.layers.Dense(64, activation=tf.nn.relu),
-    keras.layers.Dense(2, activation=tf.nn.softmax)
+    keras.layers.Dense(8, activation=tf.nn.softmax)
 ])
 
 print("compiling model..")
@@ -164,7 +168,7 @@ print("model compiled, attempting fit with data")
 ###
 #Grab new eeg_state+controller_state to test model with
 ###
-model.fit(EEG_Training_State, Controller_Training_State, epochs=5000, callbacks=[callbacks])
+model.fit(EEG_Training_State, Controller_Training_State, epochs=500, callbacks=[callbacks])
 
 model.evaluate(EEG_State, Controller_State)
 model.save("mymodel")
