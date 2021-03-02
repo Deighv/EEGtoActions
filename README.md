@@ -1,6 +1,6 @@
 # EEG To Action
 
-A system to store EEG Data alongsite an input device, in an effort to create a model via machine learning to interpret brain signals as a medium for input devices
+A system to store EEG Data alongside an input device with paired timestamps, in an effort to create a model via machine learning to interpret brain signals as a medium for input devices
 
 ## Installation
 
