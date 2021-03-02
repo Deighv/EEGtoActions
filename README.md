@@ -1,6 +1,6 @@
 # EEG To Action
 
-A system to extract EEG + Controller data while gaming, analyze the signals and create a model with Tensorflow in the effort of creating interface devices using EEG signals 
+A system to store EEG Data alongsite an input device, in an effort to create a model via machine learning to interpret brain signals as a medium for input devices
 
 ## Installation
 
