@@ -10,7 +10,7 @@ A system to store EEG Data alongsite an input device, in an effort to create a m
 * Run in folder: 'pip install -r requirements.txt'
 * Install postgres, run SQL scripts in data folder, optionally use real passwords
 * Backup of my database available here if you're unable to make your own data- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing 
-  * https://www.postgresql.org/docs/7.3/app-pgrestore.html 
+  * I've accomplished this via making the eeg database in postgres, running the database creation script, and restoring the database via interface to the file above
 
 ## Running and storing data
 * Equip EEG, turn on
