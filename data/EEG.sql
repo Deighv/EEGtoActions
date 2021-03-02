@@ -1,5 +1,5 @@
 --Must create DB in separate script/gui:
---CREATE DATABASE EEG;
+--CREATE DATABASE eeg;
 
 DROP TABLE IF EXISTS Headset_Data CASCADE;
 CREATE TABLE Headset_Data (
