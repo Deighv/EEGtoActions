@@ -32,8 +32,11 @@ A system to store EEG Data alongside an input device with paired timestamps, in 
 * Controller_Data_Normalized_View - This converts stick pushes into dpad cardinal directions (This assists with the final table..)
 * Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press.  Currently this is backed down to reading left/straight/right in an effort to proof of concept
 
-## Todo - Interface Layer
-* Use model to create action:hardware emulation
+## Interface Layer
+* Check_Model.py
+* Preprocess Data in same fashion as create model but with live data vs pull from SQL
+* Pull existing model in, apply live data
+* Attempting to shoehorn Sentdex's left|right test
 
 
 
