@@ -23,14 +23,15 @@ A system to store EEG Data alongside an input device with paired timestamps, in 
 
 ## Creating Model (post data collection/importing DB)
 * run 'python createModel.py' 
-* Model pulls data from all rows save most recent 1000 (this needs to change to better represent data) and compares it to all data entries minus that 1000
-* I can only imagine there is significant room for improvement here
+* Model uses every 10th row as data to test against, all other rows as training data
+* Compares headset_data to controller_data_press_index (currently modified to only do left/right) and creates a model
+
 
 ## Database Structure
 * Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
 * Controller_Data - This table stores the controller's state as of the moment the EEG signal came in
 * Controller_Data_Normalized_View - This converts stick pushes into dpad cardinal directions (This assists with the final table..)
-* Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press.  Currently this is backed down to reading left/straight/right in an effort to proof of concept
+* Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press.  Currently this is backed down to reading left/straight/right(3 potential states) in an effort to proof of concept
 
 ## Interface Layer
 * Check_Model.py
