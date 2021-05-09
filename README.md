@@ -1,6 +1,6 @@
 # EEG To Action
 
-A system to extract EEG + Controller data while gaming, analyze the signals and create a model with Tensorflow in the effort of creating interface devices using EEG signals 
+A system to store EEG Data alongside an input device with paired timestamps, in an effort to create a model via machine learning to interpret brain signals as a medium for input devices
 
 ## Installation
 
@@ -10,32 +10,27 @@ A system to extract EEG + Controller data while gaming, analyze the signals and 
 * Run in folder: 'pip install -r requirements.txt'
 * Install postgres, run SQL scripts in data folder, optionally use real passwords
 * Backup of my database available here if you're unable to make your own data- https://drive.google.com/file/d/18oJ2Dt9TI7pDZOlMZYIfiuzEtJDtbdba/view?usp=sharing 
-  * https://www.postgresql.org/docs/7.3/app-pgrestore.html 
+  * I've accomplished this via making the eeg database in postgres, running the database creation script, and restoring the database via interface to the file above
+
+## Running and storing data
+* Equip EEG, turn on
+* Run 'python openbci_lsl.py'
+  * Daisy Enabled+16 channels
+  * Use GUI to connect to board, start stream to LSL for scripts to pick up on
+
+* Run 'python outputEEGData.py' to pull down data simultaneously from EEG+Controller
+* (optional) Fire up pgAdmin, ensure rows are being created
+
+## Creating Model (post data collection/importing DB)
+* run 'python createModel.py' 
+* Model pulls data from all rows save most recent 1000 (this needs to change to better represent data) and compares it to all data entries minus that 1000
+* I can only imagine there is significant room for improvement here
 
 ## Database Structure
 * Headset_Data - This table stores each series of signals from the EEG in individual columns+rows
 * Controller_Data - This table stores the controller's state as of the moment the EEG signal came in
 * Controller_Data_Normalized_View - This converts stick pushes into dpad cardinal directions (This assists with the final table..)
-* Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press (which would also be possible in this system)- this is grabbed via a kind of cartesian join in the model layer
-
-## Data Layer
-* outputEEGData.py - This script reads signals incoming from an (Open BCI Ultracortex Mk 4) EEG. Each time a signal comes in (240/second on average), the system checks the controller state, and stores both in the database with the same timestamp  
-* Equip EEG, turn on
-* Launch openbci, connect, stream, check levels + resolve any sensor position issues
-  * Stop Stream, Stop Session
-
-* Run 'python openbci_lsl.py'
-  * Daisy Enabled (Where 16 channels available)
-  * Use GUI to connect to board, start stream
-
-* Run 'python outputEEGData.py' to begin pulling down controller state+eeg data and putting into postgres
-* Fire up pgAdmin, ensure rows are being created
-
-
-## Model Layer
-
-* Run 'python outputEEGData.py' - Work in Progress- have pulled down data to use + basic tweaks to get the data in the correct form
-  
+* Controller_Press_Index - This turns every state the controller can be in into a single number.  This allows for ML to compare signals to 82 indexed states, instead of trying to map it to each button press.  Currently this is backed down to reading left/straight/right in an effort to proof of concept
 
 ## Todo - Interface Layer
 * Use model to create action:hardware emulation

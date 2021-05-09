@@ -1,5 +1,5 @@
 --Must create DB in separate script/gui:
---CREATE DATABASE EEG;
+--CREATE DATABASE eeg;
 
 -- Table: public.headset_data
 
