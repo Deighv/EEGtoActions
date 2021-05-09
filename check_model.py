@@ -21,7 +21,7 @@ model.predict( np.zeros((32,16,60)).reshape(reshape))
 #Connecting: cyton, 16ch, 60hz,com 3
 print("Finding Data Streams")
 streams = resolve_stream('type', 'EEG')
-#accStream = StreamInlet(streams[0]) #Accelerometer
+#accStream = StreamInlet(streams[1]) #Accelerometer
 inlet = StreamInlet(streams[0]) #timeseries 
 print("Streams Resolved")
 

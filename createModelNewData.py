@@ -1,9 +1,5 @@
-#Flawed due to bad test dataset, need to grab every 10th row WHERE ID%13 = 0 ORDER BY ID
-#WHERE internal or made up Row.ID is divisible by 10, get all those rows
-#other bat uses where not divisible by 10
-#SELECT tab.*,
-#    row_number() OVER () as rnum
-#  FROM tab;
+#reworking with only 3 potential outcomes- left/right/center
+#also reworked data pull to get every 10th row to test on and all other rows as training data
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
