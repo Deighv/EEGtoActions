@@ -18,43 +18,41 @@ class myCallback(tf.keras.callbacks.Callback):
 callbacks = myCallback()
 
 print("Connecting to Database")
-conn = psycopg2.connect(database="EEG_Dec", user="postgres", password="penislol", host="127.0.0.1", port="5432")
+conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
+#conn = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
 print(conn)
 
-#Get 1000 latest controller indexes
+#now only checking for left/right as proof of concept
+
+#Get Every 10th row to check against
 controllerIndexSQL = """
-SELECT cpi.controller_press_index_id
-	FROM controller_data_normalized_view vw
-RIGHT OUTER JOIN controller_press_index cpi ON
-  cpi.dpad_right = vw.dpad_right AND
-  cpi.dpad_left = vw.dpad_left AND
-  cpi.dpad_up = vw.dpad_up AND
-  cpi.dpad_down = vw.dpad_down AND
-  vw.x = cpi.x AND
-  vw.y = cpi.y AND
-  vw.a = cpi.a AND
-  vw.b = cpi.b
-ORDER BY Time_ID ASC LIMIT 100000;
+SELECT
+(CASE 
+   WHEN dpad_right = true THEN 1
+   WHEN dpad_left = true THEN 2
+   ELSE 0
+END)
+as LeftRight
+    FROM controller_data_normalized_view
+WHERE RIGHT(CAST(Row_Index AS TEXT), 1) = '0'
+ORDER BY Time_ID ASC
 """
 
-#Get all rows - first 1000
+#Get all rows not every 10th
 controllerTrainingIndexSQL = """
-SELECT cpi.controller_press_index_id
-	FROM controller_data_normalized_view vw
-RIGHT OUTER JOIN controller_press_index cpi ON
-  cpi.dpad_right = vw.dpad_right AND
-  cpi.dpad_left = vw.dpad_left AND
-  cpi.dpad_up = vw.dpad_up AND
-  cpi.dpad_down = vw.dpad_down AND
-  vw.x = cpi.x AND
-  vw.y = cpi.y AND
-  vw.a = cpi.a AND
-  vw.b = cpi.b
-ORDER BY Time_ID ASC 
-LIMIT (SELECT COUNT(controller_data_normalized_view.x) FROM controller_data_normalized_view) - 100000 offset 100000;
+SELECT
+(CASE 
+   WHEN dpad_right = true THEN 1
+   WHEN dpad_left = true THEN 2
+   ELSE 0
+END)
+as LeftRight
+    FROM controller_data_normalized_view
+WHERE RIGHT(CAST(Row_Index AS TEXT), 1) != '0'
+ORDER BY Time_ID ASC
 """
 
-#Get newest 1000 eeg states
+#Get every 10th EEG row
 EEGSql = """
 SELECT  
 ROUND(SUM(GREATEST(channel0, 0)),0),
@@ -76,12 +74,13 @@ ROUND(SUM(GREATEST(channel15, 0)),0)
   FROM headset_data a
 INNER JOIN controller_data_normalized_view b
   ON a.Time_ID = b.Time_ID
+WHERE RIGHT(CAST(Primary_Key AS TEXT), 1) = '0'
 GROUP BY a.Time_ID 
 ORDER BY a.Time_ID ASC
-LIMIT 100000;
+
 """
 
-#Get all EEG data rows excluding the first 1000, round/sum/greatest to remove nonzero values+decimals
+#Get all rows not ending in 0
 eegTrainingDataSQL = """
 SELECT  
 ROUND(SUM(GREATEST(channel0, 0)),0),
@@ -103,9 +102,9 @@ ROUND(SUM(GREATEST(channel15, 0)),0)
   FROM headset_data a
 INNER JOIN controller_data_normalized_view b
   ON a.Time_ID = b.Time_ID
+WHERE RIGHT(CAST(Primary_Key AS TEXT), 1) != '0'
 GROUP BY a.Time_ID 
 ORDER BY a.Time_ID ASC
-LIMIT (SELECT COUNT(headset_data.channel0) FROM headset_data) - 100000 offset 100000;
 """
 
 with conn.cursor() as curs:
@@ -154,16 +153,22 @@ print("EEG Training Data Numpy'd")
 #Final number is the range of eeg data after dividing by highest number
 #could normalize this to be in scale with each channel not by overall highest
 #Need to set reshape size to be number of rows dynamically
-#"68645" is highest eeg signal value recordedish
-EEG_Training_State=EEG_Training_State.reshape(1314885, 16, 1, 1)
+
+#EEG_Training_State=EEG_Training_State.reshape(Number of Rows from eegTrainingDataSQL, Number of Channels, Number of Rows, Range of result of Data)
+EEG_Training_State=EEG_Training_State.reshape(28314, 16, 1, 1)
+
+#ML likes to deal with smaller values (IIRC), so scale the numbers down via the max sensor reading
 EEG_Training_State=EEG_Training_State / 68645
-EEG_State = EEG_State.reshape(100000, 16, 1, 1)
+
+#EEG_Training_State=EEG_Training_State.reshape(Number of Rows in EEGSql, 16, 1, 1)
+EEG_State = EEG_State.reshape(3145, 16, 1, 1)
 EEG_State=EEG_State/ 68645
 
+#3 is the number of options we want to choose between
 model = tf.keras.models.Sequential([
     keras.layers.Flatten(),
     keras.layers.Dense(64, activation=tf.nn.relu),
-    keras.layers.Dense(81, activation=tf.nn.softmax)
+    keras.layers.Dense(3, activation=tf.nn.softmax)
 ])
 
 print("compiling model..")
@@ -174,8 +179,9 @@ print("model compiled, attempting fit with data")
 ###
 #Grab new eeg_state+controller_state to test model with
 ###
-model.fit(EEG_Training_State, Controller_Training_State, epochs=25, callbacks=[callbacks])
-
+#model.fit(EEG_Training_State, Controller_Training_State, epochs=50, callbacks=[callbacks])
+model.fit(EEG_Training_State, Controller_Training_State, epochs=50)
+print("Model Fit Complete, Begin Eval")
 model.evaluate(EEG_State, Controller_State)
 model.save("mymodel")
 print("model Saved?")
