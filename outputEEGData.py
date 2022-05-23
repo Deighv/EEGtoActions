@@ -5,7 +5,7 @@ import psycopg2
 import XInput
 #This Grabs data from the EEG/LSL from open BCI and inserts a line to a DB for every entry, previously grabbed accelerometer data as well, was dropped for simplicity
 print("Connecting to Database")
-con = psycopg2.connect(database="eeg", user="postgres", password="penislol", host="127.0.0.1", port="5432")
+con = psycopg2.connect(database="eeg", user="postgres", password="password", host="127.0.0.1", port="5432")
 print(con)
 cur = con.cursor() 
 #Connecting: cyton, 16ch, 60hz,com 3
